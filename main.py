@@ -37,7 +37,7 @@ class Character:
         rolls = self.roll_dice(3, 6)
         total = sum(rolls)
         while len(set(rolls)) == 1:  # While all three rolls are the same
-            self.triples.append(total)
+            self.triples.append(attr)  # Append attribute name instead of total
             rolls = self.roll_dice(3, 6)
             total += sum(rolls)
         return max(total, 7)  # Ensuring the value is at least 7
@@ -55,8 +55,9 @@ class Character:
         self.weight = int(self.weight * self.modifiers.get("Weight", 1))
 
     def load_kindred_modifiers(self):
+        kindred_file = self.kindred.lower().replace(" ", "_") + "_modifiers.json"
         try:
-            with open(f"{self.kindred.lower()}_modifiers.json", "r") as file:
+            with open(kindred_file, "r") as file:
                 self.modifiers = json.load(file)
         except FileNotFoundError:
             print(f"No modifiers file found for {self.kindred}. Using default modifiers.")
@@ -68,11 +69,11 @@ class Character:
             asterisk = "*" if attr in self.triples else ""
             print(f"{attr}: {value}{asterisk}")
         if self.triples:
-            print("Specialist attributes enhanced for:", ", ".join(self.triples))
+            print("Specialist attributes enhanced for:", ", ".join(str(attr) for attr in self.triples))
         print(f"Combat ADDS: {self.combat_adds}")
 
     def prompt_for_details(self):
-        self.kindred = self.select_option("Select Kindred", ["Human", "Dwarf", "Elf", "Fairie", "Leprechaun", "Hobbs"])
+        self.kindred = self.select_option("Select Kindred", ["Human", "Dwarf-Midgardian", "Dwarf-Gristlegrim", "Elf", "Fairie", "Leprechaun", "Hobbs"])
         self.load_kindred_modifiers()
         self.character_type = self.select_option("Select Character Type", ["Warrior", "Wizard", "Rogue"])
         self.gender = input("Enter Gender: ")
