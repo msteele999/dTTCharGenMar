@@ -25,7 +25,7 @@ class Character:
             "LK": 0,
             "IQ": 0,
             "WIZ": 0,
-            "CHA": 0
+            "CHAR": 0
         }
         self.triples = []
         self.combat_adds = 0
@@ -69,17 +69,18 @@ class Character:
         for attr in self.attributes:
             base_value = self.attributes[attr]
             if attr in self.triples:
-                # Re-roll for specialist attributes
+                # Enhance specialist attributes before applying modifiers
                 while True:
                     rolls = self.roll_dice(3, 6)
-                    if len(set(rolls)) != 1:  # Stop if not all rolls are the same
-                        base_value += sum(rolls)
-                        break
                     base_value += sum(rolls)
+                    if len(set(rolls)) != 1:  # Stop if not all rolls are the same
+                        break
             self.attributes[attr] = ceil(base_value * self.modifiers.get(attr, 1))
+        self.display_attributes()  # Display modified attributes for debugging
 
     def load_kindred_modifiers(self):
-        kindred_file = self.kindred.lower().replace("-", "_") + "_modifiers.json"
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        kindred_file = os.path.join(base_dir, 'data', self.kindred.lower().replace("-", "_") + "_modifiers.json")
         try:
             with open(kindred_file, 'r') as file:
                 self.modifiers = json.load(file)
@@ -95,10 +96,10 @@ class Character:
             print(f"{attr}: {value}{asterisk}")
         if self.triples:
             print("Specialist attributes enhanced for:", ", ".join(str(attr) for attr in self.triples))
-        print("Combat ADDS: {self.combat_adds}\n")
+        print(f"Combat ADDS: {self.combat_adds}\n")
 
     def prompt_for_details(self):
-        self.kindred = self.select_option("Select Kindred", ["Human", "Dwarf-Midgardian", "Dwarf-Gristlegrim", "Elf", "Fairie", "Leprechaun", "Hobb"])
+        self.kindred = self.select_option("Select Kindred", ["Human", "Midgardian Dwarf", "Gristlegrim Dwarf", "Elf", "Fairie", "Leprechaun", "Hobb"])
         self.load_kindred_modifiers()
         self.character_type = self.select_option("Select Character Type", ["Warrior", "Wizard", "Rogue"])
         self.gender = self.select_option("Select Gender", ["M", "F"])
@@ -182,6 +183,7 @@ def main():
             break
 
     character.prompt_for_details()
+    character.load_kindred_modifiers()
     character.apply_kindred_modifiers()
     character.calculate_combat_adds()  # Recalculate Combat ADDS after applying modifiers
     character.calculate_wt_possible()  # Calculate Wt. Possible after applying modifiers
