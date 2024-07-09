@@ -187,7 +187,7 @@ class Character:
             asterisk = "*" if attr in self.triples else ""
             print(f"{attr}: [{original_value}] -> {value}{asterisk}")
         if self.triples:
-            print("Specialist attributes enhanced for:", ", ".join(str(attr) for attr in self.triples))
+            print("\nSpecialist attributes enhanced for:", ", ".join(str(attr) for attr in self.triples))
         print(f"Combat ADDS: {self.combat_adds}")
         if self.notes:
             print("\nSpecialist Notes:")
