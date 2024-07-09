@@ -25,7 +25,7 @@ class Character:
             "LK": 0,
             "IQ": 0,
             "WIZ": 0,
-            "CHAR": 0
+            "CHA": 0
         }
         self.triples = []
         self.combat_adds = 0
@@ -67,22 +67,21 @@ class Character:
 
     def apply_kindred_modifiers(self):
         for attr in self.attributes:
+            base_value = self.attributes[attr]
             if attr in self.triples:
                 # Re-roll for specialist attributes
-                specialist_value = self.attributes[attr]
                 while True:
                     rolls = self.roll_dice(3, 6)
                     if len(set(rolls)) != 1:  # Stop if not all rolls are the same
-                        specialist_value += sum(rolls)
+                        base_value += sum(rolls)
                         break
-                    specialist_value += sum(rolls)
-                self.attributes[attr] = specialist_value
-            self.attributes[attr] = ceil(self.attributes[attr] * self.modifiers.get(attr, 1))
+                    base_value += sum(rolls)
+            self.attributes[attr] = ceil(base_value * self.modifiers.get(attr, 1))
 
     def load_kindred_modifiers(self):
         kindred_file = self.kindred.lower().replace("-", "_") + "_modifiers.json"
         try:
-            with open(kindred_file, "r") as file:
+            with open(kindred_file, 'r') as file:
                 self.modifiers = json.load(file)
         except FileNotFoundError:
             print(f"No modifiers file found for {self.kindred}. Using default modifiers.")
@@ -90,12 +89,13 @@ class Character:
             self.modifiers.update({"Height": 1, "Weight": 1})
 
     def display_attributes(self):
+        print("Initial Attribute Rolls\n")
         for attr, value in self.attributes.items():
             asterisk = "*" if attr in self.triples else ""
             print(f"{attr}: {value}{asterisk}")
         if self.triples:
             print("Specialist attributes enhanced for:", ", ".join(str(attr) for attr in self.triples))
-        print(f"Combat ADDS: {self.combat_adds}")
+        print("Combat ADDS: {self.combat_adds}\n")
 
     def prompt_for_details(self):
         self.kindred = self.select_option("Select Kindred", ["Human", "Dwarf-Midgardian", "Dwarf-Gristlegrim", "Elf", "Fairie", "Leprechaun", "Hobb"])
@@ -137,7 +137,7 @@ class Character:
 
     @classmethod
     def load_from_file(cls, filename):
-
+        with open(filename, 'r') as file:
             data = json.load(file)
             character = cls()
             character.__dict__.update(data)
