@@ -66,6 +66,8 @@ class Character:
         self.level = floor(highest_prime / 10)
 
     def apply_kindred_modifiers(self):
+        print(f"Applying kindred modifiers for: {self.kindred}")
+        print(f"Original attributes: {self.attributes}")
         for attr in self.attributes:
             base_value = self.attributes[attr]
             if attr in self.triples:
@@ -75,15 +77,28 @@ class Character:
                     base_value += sum(rolls)
                     if len(set(rolls)) != 1:  # Stop if not all rolls are the same
                         break
-            self.attributes[attr] = ceil(base_value * self.modifiers.get(attr, 1))
+            modified_value = ceil(base_value * self.modifiers.get(attr, 1))
+            print(f"{attr}: {base_value} -> {modified_value} (modifier: {self.modifiers.get(attr, 1)})")
+            self.attributes[attr] = modified_value
         self.display_attributes()  # Display modified attributes for debugging
 
     def load_kindred_modifiers(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        kindred_file = os.path.join(base_dir, 'data', self.kindred.lower().replace("-", "_") + "_modifiers.json")
+        kindred_file_map = {
+            "Dwarf Midgardian": "dwarf_midgardian_modifiers.json",
+            "Dwarf Gristlegrim": "dwarf_gristlegrim_modifiers.json",
+            "Human": "human_modifiers.json",
+            "Elf": "elf_modifiers.json",
+            "Fairie": "fairie_modifiers.json",
+            "Leprechaun": "leprechaun_modifiers.json",
+            "Hobb": "hobb_modifiers.json"
+        }
+        kindred_file = kindred_file_map.get(self.kindred, "default_modifiers.json")
+        kindred_file_path = os.path.join(base_dir, 'data', kindred_file)
         try:
-            with open(kindred_file, 'r') as file:
+            with open(kindred_file_path, 'r') as file:
                 self.modifiers = json.load(file)
+                print(f"Loaded modifiers for {self.kindred}: {self.modifiers}")
         except FileNotFoundError:
             print(f"No modifiers file found for {self.kindred}. Using default modifiers.")
             self.modifiers = {attr: 1 for attr in self.attributes}
@@ -99,7 +114,7 @@ class Character:
         print(f"Combat ADDS: {self.combat_adds}\n")
 
     def prompt_for_details(self):
-        self.kindred = self.select_option("Select Kindred", ["Human", "Midgardian Dwarf", "Gristlegrim Dwarf", "Elf", "Fairie", "Leprechaun", "Hobb"])
+        self.kindred = self.select_option("Select Kindred", ["Human", "Dwarf Midgardian", "Dwarf Gristlegrim", "Elf", "Fairie", "Leprechaun", "Hobb"])
         self.load_kindred_modifiers()
         self.character_type = self.select_option("Select Character Type", ["Warrior", "Wizard", "Rogue"])
         self.gender = self.select_option("Select Gender", ["M", "F"])
@@ -183,7 +198,6 @@ def main():
             break
 
     character.prompt_for_details()
-    character.load_kindred_modifiers()
     character.apply_kindred_modifiers()
     character.calculate_combat_adds()  # Recalculate Combat ADDS after applying modifiers
     character.calculate_wt_possible()  # Calculate Wt. Possible after applying modifiers
