@@ -117,6 +117,7 @@ class Character:
             self.notes = ""
 
     def display_attributes(self):
+        print("ENTER Q AT ANY TIME TO QUIT\n")
         print("Initial Attribute Rolls\n")
         for attr, value in self.attributes.items():
             asterisk = "*" if attr in self.triples else ""
@@ -126,14 +127,16 @@ class Character:
         print(f"Combat ADDS: {self.combat_adds}\n")
 
     def prompt_for_details(self):
-        self.kindred = self.select_option("Select Kindred", ["Human", "Dwarf Midgardian", "Dwarf Gristlegrim", "Elf", "Fairie", "Leprechaun", "Hobb"])
+        self.kindred = self.select_option("\nSelect Kindred\n", ["Human", "Dwarf Midgardian", "Dwarf Gristlegrim", "Elf", "Fairie", "Leprechaun", "Hobb\n"])
+        print("\n")
         self.load_kindred_modifiers()
-        self.character_type = self.select_option("Select Character Type", ["Warrior", "Wizard", "Rogue"])
-        self.gender = self.select_option("Select Gender", ["M", "F"])
-        self.height = self.prompt_input("Enter Height (in inches): ", int)
-        self.weight = self.prompt_input("Enter Weight (in pounds): ", int)
-        self.age = self.prompt_input("Enter Age: ", int)
-        self.hair = self.prompt_input("Enter Hair: ")
+        self.character_type = self.select_option("\nSelect Character Type\n", ["Warrior", "Wizard", "Rogue\n"])
+        self.gender = self.select_option("\nSelect Gender\n", ["M", "F\n"])
+        self.height = self.prompt_input("\nEnter Height (in inches): ", int)
+        self.weight = self.prompt_input("\nEnter Weight (in pounds): ", int)
+        self.age = self.prompt_input("\nEnter Age: ", int)
+        self.hair = self.prompt_input("\nEnter Hair: ")
+        self.name = self.prompt_input("\nEnter your character's name: ")
 
     def select_option(self, prompt, options):
         while True:
@@ -172,6 +175,7 @@ class Character:
             return character
 
     def display_all_information(self):
+        print("\n")
         print(f"Name: {self.name}")
         print(f"Kindred: {self.kindred} Level: {self.level}")
         print(f"Character Type: {self.character_type}")
@@ -219,7 +223,6 @@ def main():
     character.calculate_level()  # Calculate level after applying modifiers
     character.load_specialist_notes()  # Load notes based on specialist attributes
     clear_screen()
-    character.name = character.prompt_input("Enter your character's name: ")
     character.display_all_information()
     # Save to file or further steps
 
