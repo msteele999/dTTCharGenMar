@@ -118,6 +118,7 @@ def main():
     clear_screen()
     character = Character()
     character.generate_attributes()
+    character.display_attributes()  # Display initial attributes before any adjustments
     character.prompt_for_details()
     character.apply_kindred_modifiers()
     character.calculate_combat_adds()  # Recalculate Combat ADDS after applying modifiers
