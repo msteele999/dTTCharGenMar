@@ -67,7 +67,11 @@ class Character:
 
     def apply_kindred_modifiers(self):
         for attr in self.attributes:
-            self.attributes[attr] = ceil(self.attributes[attr] * self.modifiers.get(attr, 1))
+            base_value = self.attributes[attr]
+            if attr in self.triples:
+                # Enhance specialist attributes before applying modifiers
+                base_value += self.roll_dice(3, 6)[0]
+            self.attributes[attr] = ceil(base_value * self.modifiers.get(attr, 1))
 
     def load_kindred_modifiers(self):
         kindred_file = self.kindred.lower().replace("-", "_") + "_modifiers.json"
