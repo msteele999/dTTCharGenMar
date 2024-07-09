@@ -1,0 +1,10 @@
+{
+    "STR": "Strong One. Doubles the final dice total before evaluating the result for a STR saving roll.",
+    "CON": "Sensitive. May double the final dice total before evaluating the result for a CON saving roll.",
+    "DEX": "Ranger. May double the final dice total before evaluating the result for a DEX saving roll using a specialized ranged weapon",
+    "SPD": "Martial Artist. May double the final total dice score before evaluating the result for a SPD saving roll.",
+    "LK": "Gambler. May double the final dice total before evaluating the results in any kind of calculated risk situation.",
+    "IQ": "Mastermind. May double the final total dice score before evaluating the result for an IQ saving roll.",
+    "WIZ": "Specialist Mage. Doesn’t have to learn spells from the Wizards Guild",
+    "CHA": "Leader. May double the final dice total before evaluating the result for a CHA saving roll."
+}

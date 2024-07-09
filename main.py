@@ -25,11 +25,12 @@ class Character:
             "LK": 0,
             "IQ": 0,
             "WIZ": 0,
-            "CHAR": 0
+            "CHA": 0
         }
         self.triples = []
         self.combat_adds = 0
         self.modifiers = {}
+        self.notes = ""
 
     def roll_dice(self, number_of_dice, sides):
         return [random.randint(1, sides) for _ in range(number_of_dice)]
@@ -104,6 +105,17 @@ class Character:
             self.modifiers = {attr: 1 for attr in self.attributes}
             self.modifiers.update({"Height": 1, "Weight": 1})
 
+    def load_specialist_notes(self):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        notes_file_path = os.path.join(base_dir, 'data', 'specialists_notes.json')
+        try:
+            with open(notes_file_path, 'r') as file:
+                notes_data = json.load(file)
+                self.notes = "\n".join(f"{attr}: {notes_data[attr]}" for attr in self.triples if attr in notes_data)
+        except FileNotFoundError:
+            print("No specialist notes file found.")
+            self.notes = ""
+
     def display_attributes(self):
         print("Initial Attribute Rolls\n")
         for attr, value in self.attributes.items():
@@ -173,6 +185,9 @@ class Character:
         if self.triples:
             print("Specialist attributes enhanced for:", ", ".join(str(attr) for attr in self.triples))
         print(f"Combat ADDS: {self.combat_adds}")
+        if self.notes:
+            print("\nSpecialist Notes:")
+            print(self.notes)
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -202,6 +217,7 @@ def main():
     character.calculate_combat_adds()  # Recalculate Combat ADDS after applying modifiers
     character.calculate_wt_possible()  # Calculate Wt. Possible after applying modifiers
     character.calculate_level()  # Calculate level after applying modifiers
+    character.load_specialist_notes()  # Load notes based on specialist attributes
     clear_screen()
     character.name = character.prompt_input("Enter your character's name: ")
     character.display_all_information()
