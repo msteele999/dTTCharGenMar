@@ -55,7 +55,7 @@ class Character:
         self.weight = int(self.weight * self.modifiers.get("Weight", 1))
 
     def load_kindred_modifiers(self):
-        kindred_file = self.kindred.lower().replace(" ", "_") + "_modifiers.json"
+        kindred_file = self.kindred.lower().replace("-", "_") + "_modifiers.json"
         try:
             with open(kindred_file, "r") as file:
                 self.modifiers = json.load(file)
@@ -95,7 +95,7 @@ class Character:
 
     @classmethod
     def load_from_file(cls, filename):
-        with open(filename, 'r') as file:
+        with open(filename, 'r') as file):
             data = json.load(file)
             character = cls()
             character.__dict__.update(data)
