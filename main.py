@@ -226,5 +226,21 @@ def main():
     character.display_all_information()
     # Save to file or further steps
 
+    # Ask if the user wants to roll another character
+    while True:
+        roll_another = input("\nDo you want to roll another character? (Y/N): ").strip().upper()
+        if roll_another == "Q":
+            print("Program quit by user.")
+            return
+        if roll_another in ["Y", "N"]:
+            break
+        print("Invalid choice. Please enter Y or N.")
+    
+    if roll_another == "Y":
+        main()  # Restart the main function
+    else:
+        print("\nThank you for using the character generator!\n")
+        return
+
 if __name__ == "__main__":
     main()
