@@ -67,11 +67,17 @@ class Character:
 
     def apply_kindred_modifiers(self):
         for attr in self.attributes:
-            base_value = self.attributes[attr]
             if attr in self.triples:
-                # Enhance specialist attributes before applying modifiers
-                base_value += self.roll_dice(3, 6)[0]
-            self.attributes[attr] = ceil(base_value * self.modifiers.get(attr, 1))
+                # Re-roll for specialist attributes
+                specialist_value = self.attributes[attr]
+                while True:
+                    rolls = self.roll_dice(3, 6)
+                    if len(set(rolls)) != 1:  # Stop if not all rolls are the same
+                        specialist_value += sum(rolls)
+                        break
+                    specialist_value += sum(rolls)
+                self.attributes[attr] = specialist_value
+            self.attributes[attr] = ceil(self.attributes[attr] * self.modifiers.get(attr, 1))
 
     def load_kindred_modifiers(self):
         kindred_file = self.kindred.lower().replace("-", "_") + "_modifiers.json"
@@ -92,7 +98,7 @@ class Character:
         print(f"Combat ADDS: {self.combat_adds}")
 
     def prompt_for_details(self):
-        self.kindred = self.select_option("Select Kindred", ["Human", "Dwarf-Midgardian", "Dwarf-Gristlegrim", "Elf", "Fairie", "Leprechaun", "Hobbs"])
+        self.kindred = self.select_option("Select Kindred", ["Human", "Dwarf-Midgardian", "Dwarf-Gristlegrim", "Elf", "Fairie", "Leprechaun", "Hobb"])
         self.load_kindred_modifiers()
         self.character_type = self.select_option("Select Character Type", ["Warrior", "Wizard", "Rogue"])
         self.gender = self.select_option("Select Gender", ["M", "F"])
@@ -131,7 +137,7 @@ class Character:
 
     @classmethod
     def load_from_file(cls, filename):
-        with open(filename, 'r') as file:
+
             data = json.load(file)
             character = cls()
             character.__dict__.update(data)
