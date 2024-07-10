@@ -62,7 +62,7 @@ class Character:
         self.wt_possible = self.attributes["STR"] * 100
 
     def calculate_level(self):
-        prime_attributes = ["STR", "DEX", "IQ", "WIZ"]  # Prime attributes for level calculation
+        prime_attributes = ["STR", "CON", "DEX", "SPD", "LK", "IQ", "WIZ", "CHA"]  # Prime attributes for level calculation
         highest_prime = max(self.attributes[attr] for attr in prime_attributes)
         self.level = floor(highest_prime / 10)
 
