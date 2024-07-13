@@ -3,7 +3,9 @@ import random
 import os
 from math import floor, ceil
 
+# Class to represent a character
 class Character:
+    # Initialize the character with default values
     def __init__(self):
         self.name = ""
         self.kindred = ""
@@ -32,14 +34,17 @@ class Character:
         self.modifiers = {}
         self.notes = ""
 
+    # Roll a specified number of dice with a given number of sides
     def roll_dice(self, number_of_dice, sides):
         return [random.randint(1, sides) for _ in range(number_of_dice)]
 
+    # Generate the character's attributes
     def generate_attributes(self):
         for attr in self.attributes:
             self.attributes[attr] = self.roll_and_check_triples(attr)
         self.original_attributes = self.attributes.copy()
 
+    # Roll dice and check for triples (three identical rolls)
     def roll_and_check_triples(self, attr):
         rolls = self.roll_dice(3, 6)
         total = sum(rolls)
@@ -49,23 +54,28 @@ class Character:
             total += sum(rolls)
         return max(total, 7)  # Ensuring the value is at least 7
 
+    # Calculate combat adds based on specific attributes
     def calculate_combat_adds(self):
         self.combat_adds = 0
         for attr in ["STR", "LK", "DEX", "SPD"]:
             if self.attributes[attr] > 12:
                 self.combat_adds += self.attributes[attr] - 12
 
+    # Calculate the character's money
     def calculate_money(self):
         self.money = sum(self.roll_dice(3, 6)) * 10
 
+    # Calculate the character's weight carrying capacity
     def calculate_wt_possible(self):
         self.wt_possible = self.attributes["STR"] * 100
 
+    # Calculate the character's level
     def calculate_level(self):
         prime_attributes = ["STR", "CON", "DEX", "SPD", "LK", "IQ", "WIZ", "CHA"]  # Prime attributes for level calculation
         highest_prime = max(self.attributes[attr] for attr in prime_attributes)
         self.level = floor(highest_prime / 10)
 
+    # Apply modifiers based on the character's kindred
     def apply_kindred_modifiers(self):
         print(f"Applying kindred modifiers for: {self.kindred}")
         print(f"Original attributes: {self.attributes}")
@@ -83,6 +93,7 @@ class Character:
             self.attributes[attr] = modified_value
         self.display_attributes()  # Display modified attributes for debugging
 
+    # Load kindred-specific modifiers from a file
     def load_kindred_modifiers(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
         kindred_file_map = {
@@ -105,6 +116,7 @@ class Character:
             self.modifiers = {attr: 1 for attr in self.attributes}
             self.modifiers.update({"Height": 1, "Weight": 1})
 
+    # Load specialist notes based on enhanced attributes
     def load_specialist_notes(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
         notes_file_path = os.path.join(base_dir, 'data', 'specialists_notes.json')
@@ -116,6 +128,7 @@ class Character:
             print("No specialist notes file found.")
             self.notes = ""
 
+    # Display the character's attributes
     def display_attributes(self):
         print("ENTER Q AT ANY TIME TO QUIT\n")
         print("Initial Attribute Rolls\n")
@@ -126,6 +139,7 @@ class Character:
             print("Specialist attributes enhanced for:", ", ".join(str(attr) for attr in self.triples))
         print(f"Combat ADDS: {self.combat_adds}\n")
 
+    # Prompt the user to enter character details
     def prompt_for_details(self):
         self.kindred = self.select_option("\nSelect Kindred\n", ["Human", "Dwarf Midgardian", "Dwarf Gristlegrim", "Elf", "Fairie", "Leprechaun", "Hobb\n"])
         print("\n")
@@ -138,6 +152,7 @@ class Character:
         self.hair = self.prompt_input("\nEnter Hair: ")
         self.name = self.prompt_input("\nEnter your character's name: ")
 
+    # Helper function to display options and get user choice
     def select_option(self, prompt, options):
         while True:
             print(prompt)
@@ -151,6 +166,7 @@ class Character:
                 return options[int(choice) - 1]
             print("Invalid choice. Please try again.")
 
+    # Helper function to prompt for user input and convert to the correct type
     def prompt_input(self, prompt, input_type=str):
         while True:
             value = input(prompt).strip().upper()
@@ -162,10 +178,12 @@ class Character:
             except ValueError:
                 print("Invalid input. Please try again.")
 
+    # Save character data to a file
     def save_to_file(self, filename):
         with open(filename, 'w') as file:
             json.dump(self.__dict__, file)
 
+    # Load character data from a file
     @classmethod
     def load_from_file(cls, filename):
         with open(filename, 'r') as file:
@@ -174,6 +192,7 @@ class Character:
             character.__dict__.update(data)
             return character
 
+    # Display all character information
     def display_all_information(self):
         print("\n")
         print(f"Name: {self.name}")
@@ -193,9 +212,11 @@ class Character:
             print("\nSpecialist Notes:")
             print(self.notes)
 
+# Clear the screen
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+# Main function to drive the character creation process
 def main():
     while True:
         clear_screen()
@@ -224,7 +245,6 @@ def main():
     character.load_specialist_notes()  # Load notes based on specialist attributes
     clear_screen()
     character.display_all_information()
-    # Save to file or further steps
 
     # Ask if the user wants to roll another character
     while True:
