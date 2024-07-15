@@ -195,11 +195,12 @@ class Character:
         horizontal = '═'
         vertical = '║'
         print("\n")
-        print(top_left + horizontal * 48 + top_right) # print the top of the character card
-        print(f"║ Name: {self.name}")
-        print(f"║ Kindred: {self.kindred} Level: {self.level}")
-        print(f"║ Character Type: {self.character_type}")
-        print(f"║ Gender: {self.gender} Height: {self.height} inches Weight: {self.weight} pounds")
+        print(f"╔{'═'*58}╗") # print the top of the character card
+        print(f"║ Name: {self.name:<51}║")
+        print(f"║ Kindred: {self.kindred} Level: {self.level:<35}║")
+        print(f"║ Character Type: {self.character_type:<41}║")
+        total_length = len(f"║ Gender: {self.gender} Height: {self.height} inches Weight: {self.weight} pounds")
+        print(f"║ Gender: {self.gender} Height: {self.height} inches Weight: {self.weight} pounds{' ' * (60 - total_length)}║")
         print(f"║ Age: {self.age} Hair: {self.hair} Money: {self.money} GP")
         print(f"║ Wt. Possible: {self.wt_possible} Weight Units / {self.wt_possible/10} Pounds")
         for attr, value in self.attributes.items():
