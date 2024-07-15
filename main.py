@@ -81,13 +81,13 @@ class Character:
         print(f"Original attributes: {self.attributes}")
         for attr in self.attributes:
             base_value = self.attributes[attr]
-            if attr in self.triples:
-                # Enhance specialist attributes before applying modifiers
-                while True:
-                    rolls = self.roll_dice(3, 6)
-                    base_value += sum(rolls)
-                    if len(set(rolls)) != 1:  # Stop if not all rolls are the same
-                        break
+ #           if attr in self.triples:
+ #               # Enhance specialist attributes before applying modifiers
+ #               while True:
+ #                   rolls = self.roll_dice(3, 6)
+ #                   base_value += sum(rolls)
+ #                   if len(set(rolls)) != 1:  # Stop if not all rolls are the same
+ #                       break
             modified_value = ceil(base_value * self.modifiers.get(attr, 1))
             print(f"{attr}: {base_value} -> {modified_value} (modifier: {self.modifiers.get(attr, 1)})")
             self.attributes[attr] = modified_value
