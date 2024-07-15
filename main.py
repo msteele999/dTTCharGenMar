@@ -187,22 +187,30 @@ class Character:
 
     # Display all character information
     def display_all_information(self):
+        # define the ASCII characters to use for the character card
+        top_left = '╔'
+        top_right = '╗'
+        bottom_left = '╚'
+        bottom_right = '╝'
+        horizontal = '═'
+        vertical = '║'
         print("\n")
-        print(f"Name: {self.name}")
-        print(f"Kindred: {self.kindred} Level: {self.level}")
-        print(f"Character Type: {self.character_type}")
-        print(f"Gender: {self.gender} Height: {self.height} inches Weight: {self.weight} pounds")
-        print(f"Age: {self.age} Hair: {self.hair} Money: {self.money} GP")
-        print(f"Wt. Possible: {self.wt_possible} Weight Units / {self.wt_possible/10} Pounds")
+        print(top_left + horizontal * 48 + top_right) # print the top of the character card
+        print(f"║ Name: {self.name}")
+        print(f"║ Kindred: {self.kindred} Level: {self.level}")
+        print(f"║ Character Type: {self.character_type}")
+        print(f"║ Gender: {self.gender} Height: {self.height} inches Weight: {self.weight} pounds")
+        print(f"║ Age: {self.age} Hair: {self.hair} Money: {self.money} GP")
+        print(f"║ Wt. Possible: {self.wt_possible} Weight Units / {self.wt_possible/10} Pounds")
         for attr, value in self.attributes.items():
             original_value = self.original_attributes[attr]
             asterisk = "*" if attr in self.triples else ""
-            print(f"{attr}: [{original_value}] -> {value}{asterisk}")
+            print(f"║ {attr}: [{original_value}] -> {value}{asterisk}")
         if self.triples:
-            print("\nSpecialist attributes enhanced for:", ", ".join(str(attr) for attr in self.triples))
-        print(f"Combat ADDS: {self.combat_adds}")
+            print("\n║ Specialist attributes enhanced for:", ", ".join(str(attr) for attr in self.triples))
+        print(f"║ Combat ADDS: {self.combat_adds}")
         if self.notes:
-            print("\nSpecialist Notes:")
+            print("\n║ Specialist Notes:")
             print(self.notes)
 
 # Clear the screen
