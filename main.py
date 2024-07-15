@@ -200,7 +200,7 @@ class Character:
         print(f"Character Type: {self.character_type}")
         print(f"Gender: {self.gender} Height: {self.height} inches Weight: {self.weight} pounds")
         print(f"Age: {self.age} Hair: {self.hair} Money: {self.money} GP")
-        print(f"Wt. Possible: {self.wt_possible} pounds")
+        print(f"Wt. Possible: {self.wt_possible} Weight Units / {self.wt_possible/10} Pounds")
         for attr, value in self.attributes.items():
             original_value = self.original_attributes[attr]
             asterisk = "*" if attr in self.triples else ""
