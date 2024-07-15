@@ -222,6 +222,7 @@ def main():
         clear_screen()
         character = Character()
         character.generate_attributes()
+        character.calculate_combat_adds()  # Calculate the initial Combat ADDS before applying modifiers
         character.calculate_money()
         character.display_attributes()  # Display initial attributes before any adjustments
 
